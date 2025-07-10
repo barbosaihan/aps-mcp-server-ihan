@@ -11,7 +11,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "inspect": "mcp-inspector node ./build/server.js"
+    "inspect": "mcp-inspector node ./build/server.js",    
+    "start": "node build/server.js"
   },
   "files": [
     "build"
