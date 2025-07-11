@@ -18,3 +18,17 @@ try {
 } catch (err) {
     console.error("Server error:", err);
 }
+// ... seu código existente ...
+
+try {
+    await server.connect(new StdioServerTransport());
+    console.log("Server connected via stdio, entering keep-alive mode."); // Adicione este log
+
+    // Adicione este bloco para manter o processo rodando indefinidamente
+    setInterval(() => {
+        // Esta função vazia impede que o processo Node.js termine sozinho.
+    }, 1000 * 60 * 60); // Um intervalo longo, como uma vez por hora, é suficiente.
+
+} catch (err) {
+    console.error("Server error:", err);
+}
