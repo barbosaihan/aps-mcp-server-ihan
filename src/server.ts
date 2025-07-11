@@ -1,6 +1,7 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-// IMPORTANTE: Trocamos o StdioServerTransport pelo HttpServerTransport
-import { HttpServerTransport } from "@modelcontextprotocol/sdk/server/http.js"; 
+// MUDANÇA PRINCIPAL AQUI:
+// Unimos as importações em uma só, do diretório principal do servidor da SDK.
+import { McpServer, HttpServerTransport } from "@modelcontextprotocol/sdk/server";
+
 import * as tools from "./tools/index.js";
 import { APS_CLIENT_ID, APS_CLIENT_SECRET, APS_SA_ID, APS_SA_EMAIL, APS_SA_KEY_ID, APS_SA_PRIVATE_KEY } from "./config.js";
 
@@ -16,12 +17,12 @@ for (const tool of Object.values(tools)) {
 }
 
 try {
-    const port = process.env.PORT || 3000; // Usa a porta definida pelo ambiente ou 3000
-    // IMPORTANTE: Trocamos a forma de conectar para usar HTTP e uma porta
-    await server.connect(new HttpServerTransport({ port })); 
+    const port = process.env.PORT || 3000;
+    // O uso do HttpServerTransport continua o mesmo
+    await server.connect(new HttpServerTransport({ port }));
     console.log(`MCP server running and listening on http://localhost:${port}`);
 
 } catch (err) {
     console.error("Server error:", err);
-    process.exit(1); // Encerra se não conseguir iniciar o servidor
+    process.exit(1);
 }
