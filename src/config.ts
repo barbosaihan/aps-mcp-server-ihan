@@ -7,25 +7,31 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, "..", ".env") });
 
 // Pega as variáveis normais do ambiente
-const { APS_CLIENT_ID, APS_CLIENT_SECRET, APS_SA_ID, APS_SA_EMAIL, APS_SA_KEY_ID } = process.env;
+const { 
+    APS_CLIENT_ID, 
+    APS_CLIENT_SECRET, 
+    APS_BUCKET, // Adicionei o BUCKET que estava faltando
+    APS_SA_ID, 
+    APS_SA_EMAIL, 
+    APS_SA_KEY_ID 
+} = process.env;
 
-// --- AQUI ESTÁ A MUDANÇA ---
-// 1. Pega a chave privada codificada em Base64 do ambiente
+// Pega a chave privada codificada em Base64 do ambiente
 const encodedPrivateKey = process.env.APS_SA_PRIVATE_KEY;
 
-// 2. Decodifica a chave para o formato original.
-//    Adicionamos uma verificação para o caso de a variável estar vazia.
+// Decodifica a chave para o formato original.
 const decodedPrivateKey = encodedPrivateKey
     ? Buffer.from(encodedPrivateKey, 'base64').toString('utf8')
     : undefined;
 
 
-// 3. Exporta todas as variáveis, com a chave já decodificada
+// Exporta todas as variáveis, com a chave já decodificada corretamente
 export {
     APS_CLIENT_ID,
     APS_CLIENT_SECRET,
+    APS_BUCKET,
     APS_SA_ID,
     APS_SA_EMAIL,
     APS_SA_KEY_ID,
-    APS_SA_PRIVATE_KEY: decodedPrivateKey // Exporta a chave decodificada
+    decodedPrivateKey as APS_SA_PRIVATE_KEY
 }
