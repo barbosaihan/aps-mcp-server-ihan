@@ -1,10 +1,12 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+// IMPORTANTE: Trocamos o StdioServerTransport pelo HttpServerTransport
+import { HttpServerTransport } from "@modelcontextprotocol/sdk/server/http.js"; 
 import * as tools from "./tools/index.js";
 import { APS_CLIENT_ID, APS_CLIENT_SECRET, APS_SA_ID, APS_SA_EMAIL, APS_SA_KEY_ID, APS_SA_PRIVATE_KEY } from "./config.js";
 
+// A verificação de variáveis continua a mesma
 if (!APS_CLIENT_ID || !APS_CLIENT_SECRET || !APS_SA_ID || !APS_SA_EMAIL || !APS_SA_KEY_ID || !APS_SA_PRIVATE_KEY) {
-    console.error("Missing one or more required environment variables: APS_CLIENT_ID, APS_CLIENT_SECRET, APS_SA_ID, APS_SA_EMAIL, APS_SA_KEY_ID, APS_SA_PRIVATE_KEY");
+    console.error("Missing one or more required environment variables...");
     process.exit(1);
 }
 
@@ -14,21 +16,12 @@ for (const tool of Object.values(tools)) {
 }
 
 try {
-    await server.connect(new StdioServerTransport());
-} catch (err) {
-    console.error("Server error:", err);
-}
-// ... seu código existente ...
-
-try {
-    await server.connect(new StdioServerTransport());
-    console.log("Server connected via stdio, entering keep-alive mode."); // Adicione este log
-
-    // Adicione este bloco para manter o processo rodando indefinidamente
-    setInterval(() => {
-        // Esta função vazia impede que o processo Node.js termine sozinho.
-    }, 1000 * 60 * 60); // Um intervalo longo, como uma vez por hora, é suficiente.
+    const port = process.env.PORT || 3000; // Usa a porta definida pelo ambiente ou 3000
+    // IMPORTANTE: Trocamos a forma de conectar para usar HTTP e uma porta
+    await server.connect(new HttpServerTransport({ port })); 
+    console.log(`MCP server running and listening on http://localhost:${port}`);
 
 } catch (err) {
     console.error("Server error:", err);
+    process.exit(1); // Encerra se não conseguir iniciar o servidor
 }
